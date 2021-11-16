@@ -1,23 +1,32 @@
 ---
 title: "MP2"
+author: "Cara Krupnikoff-Salkin, Lauren Meyer, and Nicole Reardon"
+date: "`r format(Sys.Date(), '%B %e, %Y')`"
 output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+```{r setup, include=FALSE}
 library(tidyverse)
 ```
 
 
-```{r Data Cleaning}
-
-
-````
-
-
-```{r Analysis}
-
+```{r data-cleaning, include = FALSE}
 
 ```
 
-This is a project. 
+
+```{r analysis}
+
+```
+
+# Introduction
+
+# Method
+
+# Results
+
+# Conclusion
