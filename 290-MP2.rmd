@@ -1,0 +1,23 @@
+---
+title: "MP2"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+```{r Data Cleaning}
+
+
+````
+
+
+```{r Analysis}
+
+
+```
+
+This is a project. 
