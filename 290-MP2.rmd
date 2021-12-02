@@ -15,7 +15,24 @@ library(tidyverse)
 
 
 ```{r data-cleaning, include = FALSE}
+data <- read.csv('MP2_data.csv')
 
+data <- data %>%
+  select(choice, worthwhile, connect, waste, value, engage, attend, type, format) %>%
+  filter(!row_number() %in% c(1, 2),
+         !is.na(attend)) %>%
+  mutate(choice = as.numeric(choice),
+         worthwhile = as.numeric(worthwhile),
+         connect = as.numeric(connect),
+         waste = as.numeric(waste),
+         value = as.numeric(value),
+         engage = as.numeric(engage),
+         attend = as.numeric(attend))
+
+data <- data %>%
+  mutate(waste_recoded = 6 - waste,
+         sum_eventscore = worthwhile + connect + waste_recoded + value + engage + attend,
+         avg_eventscore = sum_eventscore / 6)
 ```
 
 
