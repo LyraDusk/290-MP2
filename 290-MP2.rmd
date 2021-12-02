@@ -57,3 +57,25 @@ ggplot(cleaned_data, aes(x = type, y = avg_eventscore, fill = format)) +
 ggplot(cleaned_data, aes(x = format, y = avg_eventscore, fill = type)) + 
   geom_boxplot()
 ```
+
+# Exploring Business
+```{r}
+cleaned_data %>%
+  group_by(type) %>%
+  summarize(n = n(),
+            s = sd(choice),
+            m = mean(choice))
+
+mod_choice <- lm(choice ~ type * format, cleaned_data)
+anova(mod)
+
+no_business <- cleaned_data %>%
+  filter(type != 'business')
+
+mod_nobus <- lm(avg_eventscore ~ type*format, data = no_business)
+anova(mod_nobus)
+
+leveneTest(avg_eventscore ~ type * format, data = no_business)
+# perhaps removing business makes the conditions for the model better
+```
+
