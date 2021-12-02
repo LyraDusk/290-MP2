@@ -7,9 +7,7 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-```
 
-```{r setup, include=FALSE}
 library(tidyverse)
 ```
 
@@ -29,7 +27,7 @@ data <- data %>%
          engage = as.numeric(engage),
          attend = as.numeric(attend))
 
-data <- data %>%
+cleaned_data <- data %>%
   mutate(waste_recoded = 6 - waste,
          sum_eventscore = worthwhile + connect + waste_recoded + value + engage + attend,
          avg_eventscore = sum_eventscore / 6)
@@ -37,7 +35,21 @@ data <- data %>%
 
 
 ```{r analysis}
+cleaned_data %>%
+  group_by(type, format) %>%
+  summarize(m = mean(avg_eventscore), sd = sd(avg_eventscore), n = n())
 
+model1 <- lm(avg_eventscore ~ type*format, data = cleaned_data)
+anova(model1)
+#No significant differences. Not even when looking only at the virtual group, or only at the difference between the academic and business virtual groups. Alas. 
+
+library(car)
+leveneTest(avg_eventscore ~ type * format, data = cleaned_data)
+#Significant difference, invalid analysis
+
+ggplot(cleaned_data, aes(x = type, y = avg_eventscore, color = format)) + geom_point() + geom_jitter()
+ggplot(cleaned_data, aes(x = type, y = avg_eventscore, fill = format)) + geom_boxplot()
+ggplot(cleaned_data, aes(x = format, y = avg_eventscore, fill = type)) + geom_boxplot()
 ```
 
 # Introduction
