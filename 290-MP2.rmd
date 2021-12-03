@@ -79,3 +79,59 @@ leveneTest(avg_eventscore ~ type * format, data = no_business)
 # perhaps removing business makes the conditions for the model better
 ```
 
+```{r}
+#Correlation testing the response scale score. 
+#Dropping the Choice and Connect variables (both only loosely correlated with the rest of the group) creates a stronger scale score.
+library(psych)
+corr.test(select(cleaned_data, worthwhile, waste_recoded, value, engage, attend))$r
+psych::alpha(select(cleaned_data, worthwhile, waste_recoded, value, engage, attend))
+
+scale_scores <- cleaned_data %>%
+  mutate(opt_eventscore = (worthwhile + waste_recoded + value + engage + attend)/5) %>%
+  select(-waste, -sum_eventscore, -avg_eventscore)
+
+ggplot(scale_scores, aes(x = type, y = opt_eventscore, fill = format)) + geom_boxplot()
+
+model_scaled <- lm(opt_eventscore ~ type*format, data = scale_scores)
+anova(model_scaled)
+leveneTest(opt_eventscore ~ type*format, data = scale_scores)
+#Fixes the unequal variances problem, but still nothing significant
+```
+
+```{r}
+ggplot(scale_scores, aes(x = type, y = worthwhile, fill = format)) + geom_boxplot()
+ggplot(scale_scores, aes(x = type, y = waste_recoded, fill = format)) + geom_boxplot()
+ggplot(scale_scores, aes(x = type, y = value, fill = format)) + geom_boxplot()
+ggplot(scale_scores, aes(x = type, y = engage, fill = format)) + geom_boxplot()
+ggplot(scale_scores, aes(x = type, y = attend, fill = format)) + geom_boxplot()
+
+
+#Looking only at academic and business, with value as a response
+no_soc <- scale_scores %>%
+  filter(type != "social")
+no_soc_value <- lm(value ~ type*format, data = no_soc)
+anova(no_soc_value)
+leveneTest(value~ type*format, data = no_soc)
+plot(no_soc_value, which = 2)
+plot(no_soc_value, which = 1)
+
+#Looking at engagement as a response
+engagement <- lm(engage ~ type*format, data = scale_scores)
+#I think that stands up even after Bonferroni
+anova(engagement)
+leveneTest(engage ~ type*format, data = scale_scores)
+plot(engagement, which = 2)
+qplot(engagement$residuals, geom = "histogram", binwidth = 0.5)
+TukeyHSD(aov(engage ~ type, data = scale_scores))
+TukeyHSD(aov(engage ~ type*format, data = scale_scores))
+
+#Looking at waste - nothing in the normal, barely scraped into significance if you exclude social
+#but it's close enough that any multiple comparisons correction will make it insignificant
+waste <- lm(waste_recoded ~ type*format, data = scale_scores)
+anova(waste)
+waste_b <- lm(waste_recoded ~ type*format, data = no_soc)
+anova(waste_b)
+leveneTest(waste_recoded ~ type*format, data = scale_scores)
+
+#I personally don't see differences in many of the others that would be close enough to significant to try, but who knows
+```
