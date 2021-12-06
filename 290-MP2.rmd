@@ -67,7 +67,7 @@ cleaned_data %>%
             m = mean(choice))
 
 mod_choice <- lm(choice ~ type * format, cleaned_data)
-anova(mod)
+anova(mod_choice)
 
 no_business <- cleaned_data %>%
   filter(type != 'business')
