@@ -19,7 +19,7 @@ data <- read.csv('MP2_data.csv')
 data <- data %>%
   select(choice, worthwhile, connect, waste, value, engage, attend, type, format) %>%
   filter(!row_number() %in% c(1, 2,75,76),
-         !is.na(attend)) %>%
+         !is.na(connect)) %>%
   mutate(choice = as.numeric(choice),
          worthwhile = as.numeric(worthwhile),
          connect = as.numeric(connect),
@@ -45,7 +45,7 @@ anova(model1)
 #No significant differences. Not even when looking only at the virtual group, or only at the difference between the academic and business virtual groups. Alas. 
 
 leveneTest(avg_eventscore ~ type * format, data = cleaned_data)
-#Significant difference, invalid 
+# No significant diffference
 
 plot(model1, which = 1)
 plot(model1, which = 2)
