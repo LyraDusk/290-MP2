@@ -16,6 +16,7 @@ library(car)
 ```{r data-cleaning, include = FALSE}
 data <- read.csv('MP2_data.csv')
 
+# for some reason sometimes this has to be run twice to actually filter out the NA values
 data <- data %>%
   select(choice, worthwhile, connect, waste, value, engage, attend, type, format) %>%
   filter(!row_number() %in% c(1, 2,75,76),
@@ -27,6 +28,7 @@ data <- data %>%
          value = as.numeric(value),
          engage = as.numeric(engage),
          attend = as.numeric(attend))
+
 
 cleaned_data <- data %>%
   mutate(waste_recoded = 6 - waste,
